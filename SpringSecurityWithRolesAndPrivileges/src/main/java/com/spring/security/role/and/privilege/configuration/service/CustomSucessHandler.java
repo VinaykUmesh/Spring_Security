@@ -23,16 +23,13 @@ public class CustomSucessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
         List<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
-        System.out.println("role ==============>"+authorities.get(0).getAuthority());
         if (!(authentication instanceof AnonymousAuthenticationToken) && authorities.get(0).getAuthority()
                 .equals(AppConstants.APP_ROLE_PREFIX + AppConstants.APP_ROLE_ADMIN)) {
             response.sendRedirect(request.getContextPath() + "/admin/home");
-        }
-        if (!(authentication instanceof AnonymousAuthenticationToken) && authorities.get(0).getAuthority()
+        } else if (!(authentication instanceof AnonymousAuthenticationToken) && authorities.get(0).getAuthority()
                 .equals(AppConstants.APP_ROLE_PREFIX + AppConstants.APP_ROLE_USER)) {
             response.sendRedirect(request.getContextPath() + "/user/home");
-        }
-        if (!(authentication instanceof AnonymousAuthenticationToken) && authorities.get(0).getAuthority()
+        } else if (!(authentication instanceof AnonymousAuthenticationToken) && authorities.get(0).getAuthority()
                 .equals(AppConstants.APP_ROLE_PREFIX + AppConstants.APP_ROLE_VISITOR)) {
             response.sendRedirect(request.getContextPath() + "/visitor/home");
         } else {

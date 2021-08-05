@@ -1,7 +1,8 @@
-package com.spring.security.role.and.privilege.model;
+package com.spring.security.role.based.jwt.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -24,24 +24,24 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "user_name", length = 50, unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
-
-    @Column(name = "email_id", unique = true, nullable = false)
-    private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "Enabled")
-    private Boolean status = Boolean.TRUE;
+    @Column(name = "email_id", unique = true, nullable = false)
+    private String email;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "enabled")
+    private Boolean isEnabled = Boolean.TRUE;
+
     @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "users_roles", nullable = false)
     private Role roles;
 
     public Long getId() {
@@ -60,14 +60,6 @@ public class User {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -76,12 +68,20 @@ public class User {
         this.password = password;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public String getEmail() {
+        return email;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     public Date getCreatedAt() {
@@ -98,5 +98,17 @@ public class User {
 
     public void setRoles(Role roles) {
         this.roles = roles;
+    }
+
+    public User(String username, String password, String email, Boolean isEnabled, Date createdAt, Role roles) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.isEnabled = isEnabled;
+        this.createdAt = createdAt;
+        this.roles = roles;
+    }
+
+    public User() {
     }
 }

@@ -1,15 +1,12 @@
-package com.spring.security.role.and.privilege.configuration.service;
+package com.spring.security.role.based.jwt.configuration.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
-import com.spring.security.role.and.privilege.model.User;
-import com.spring.security.role.and.privilege.service.util.AppConstants;
+import com.spring.security.role.based.jwt.model.User;
+import com.spring.security.role.based.jwt.util.AppConstants;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
@@ -20,17 +17,9 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    public CustomUserDetails() {
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(AppConstants.APP_ROLE_PREFIX + user.getRoles().getRoleName()));
-        user.getRoles().getPrivileges().forEach(privilege -> {
-            authorities.add(new SimpleGrantedAuthority(privilege.getPrivilegeName()));
-        });
-        return authorities;
+        return AuthorityUtils.createAuthorityList(AppConstants.ROLE_STRING_PREFIX + user.getRoles().getRoleName());
     }
 
     @Override
@@ -60,11 +49,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getStatus();
-    }
-
-    public Date createdAt() {
-        return user.getCreatedAt();
+        return user.getIsEnabled();
     }
 
 }

@@ -28,7 +28,7 @@ public class ApiController {
 
     @PostMapping(value = "/app/visitor-register")
     public ResponseEntity<String> createNewVisitor(@RequestBody User user) throws UserNameAlreadyExistException {
-        userService.createNewUser(user, AppConstants.APP_ROLE_USER);
+        userService.createNewUser(user, AppConstants.APP_ROLE_VISITOR);
         return new ResponseEntity<String>("User Created Successfully " + user.getUsername(), HttpStatus.OK);
     }
 

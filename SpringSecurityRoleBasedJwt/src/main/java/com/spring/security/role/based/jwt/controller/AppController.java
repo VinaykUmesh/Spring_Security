@@ -1,8 +1,8 @@
-package com.spring.security.role.and.privilege.controller;
+package com.spring.security.role.based.jwt.controller;
 
 import java.util.ArrayList;
 
-import com.spring.security.role.and.privilege.service.util.AppUtil;
+import com.spring.security.role.based.jwt.util.AppUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,8 @@ public class AppController {
 
     @GetMapping(value = "/admin/home")
     public ResponseEntity<String> getAdmin(Authentication auth) {
-        return new ResponseEntity<String>(
-                "Welcome " + appUtil.getUserName() + " your role is " + new ArrayList<>(auth.getAuthorities()),
-                HttpStatus.OK);
+        return new ResponseEntity<String>("Welcome " + appUtil.getUserName() + " your role is "
+                + new ArrayList<>(auth.getAuthorities()).get(0).getAuthority(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/user/home")
